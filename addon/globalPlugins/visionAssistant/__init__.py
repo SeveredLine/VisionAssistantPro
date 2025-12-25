@@ -14,7 +14,7 @@ import time
 import wave
 import gc
 from urllib import request, error
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 from http import cookiejar
 from functools import wraps
 
@@ -1758,11 +1758,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         wx.CallAfter(self.report_status, msg)
         
         lang = config.conf["VisionAssistant"]["ai_response_language"]
-        p = PROMPT_VIDEO_ANALYSIS.format(target_lang=lang)
+        p = f"Analyze this video. Provide a detailed description of the visual content and a summary of the audio. IMPORTANT: Write the entire response STRICTLY in {lang} language."
 
         chat_attachments = []
 
-        if "instagram.com" in url:
+        try:
+            parsed_url = urlparse(url)
+            domain = parsed_url.netloc.lower()
+        except:
+            domain = ""
+
+        if domain == "instagram.com" or domain == "www.instagram.com" or domain.endswith(".instagram.com"):
             direct_link = get_instagram_download_link(url)
             if not direct_link:
                 # Translators: Error message when Instagram video link cannot be found
@@ -1805,8 +1811,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
                     os.remove(temp_path)
 
         else:
-            # Translators: Message reported when AI is analyzing the video
-            wx.CallAfter(self.report_status, _("Analyzing..."))
+            # Translators: Message reported when analyzing YouTube video
+            wx.CallAfter(self.report_status, _("Analyzing YouTube..."))
             
             chat_attachments = [{'mime_type': 'video/mp4', 'file_uri': url}]
             
