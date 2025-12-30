@@ -15,6 +15,7 @@ import wave
 import gc
 from urllib import request, error
 from urllib.parse import quote, urlparse
+from urllib.parse import quote, urlparse, urlencode
 from http import cookiejar
 from functools import wraps
 
@@ -169,6 +170,33 @@ def process_tiff_pages(path):
                 pages_data.append(base64.b64encode(stream.getvalue()).decode('utf-8'))
         except: pass
     return pages_data
+
+def get_twitter_download_link(tweet_url):
+    cj = cookiejar.CookieJar()
+    opener = request.build_opener(request.HTTPCookieProcessor(cj))
+    base_url = "https://savetwitter.net/en4"
+    api_url = "https://savetwitter.net/api/ajaxSearch"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': base_url
+    }
+    try:
+        req_init = request.Request(base_url, headers=headers)
+        opener.open(req_init)
+        params = {'q': tweet_url, 'lang': 'en', 'cftoken': ''}
+        data = urlencode(params).encode('utf-8')
+        req_post = request.Request(api_url, data=data, headers=headers, method='POST')
+        with opener.open(req_post) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            if res_data.get('status') == 'ok':
+                html = res_data.get('data', '')
+                pattern = r'href="(https?://dl\.snapcdn\.app/[^"]+)"'
+                match = re.search(pattern, html)
+                if match:
+                    return match.group(1)
+    except: pass
+    return None
 
 def get_instagram_download_link(insta_url):
     cj = cookiejar.CookieJar()
@@ -818,6 +846,28 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         cleaned = clean_markdown(text)
         ui.message(cleaned)
         return True
+
+    def script_showHelp(self, gesture):
+        if self.toggling: self.finish()
+        help_msg = (
+            "T: " + _("Translates the selected text or navigator object.") + "\n" + \
+            "Shift+T: " + _("Translates the text currently in the clipboard.") + "\n" + \
+            "R: " + _("Opens a menu to Explain, Summarize, or Fix the selected text.") + "\n" + \
+            "O: " + _("Performs OCR and description on the entire screen.") + "\n" + \
+            "V: " + _("Describes the current object (Navigator Object).") + "\n" + \
+            "D: " + _("Allows asking questions about a selected document (PDF/Text/Image).") + "\n" + \
+            "F: " + _("Recognizes text from a selected image or PDF file.") + "\n" + \
+            "A: " + _("Transcribes a selected audio file.") + "\n" + \
+"Shift+V: " + _("Analyzes a YouTube, Instagram or Twitter video URL.") + "\n" +
+            "C: " + _("Attempts to solve a CAPTCHA on the screen or navigator object.") + "\n" + \
+            "S: " + _("Records voice, transcribes it using AI, and types the result.") + "\n" + \
+            "L: " + _("Announces the current status of the add-on.") + "\n" + \
+            "U: " + _("Checks for updates manually.") + "\n" + \
+            "H: " + _("Shows a list of available commands in the layer.")
+)
+        
+        # Translators: Title of the help dialog
+        ui.browseableMessage(help_msg, _("{name} Help").format(name=ADDON_NAME))
 
     # Translators: Script description for Input Gestures dialog
     @scriptHandler.script(description=_("Announces the current status of the add-on."))
@@ -1734,16 +1784,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             self.current_status = _("Idle")
 
     # Translators: Script description for Input Gestures dialog
-    @scriptHandler.script(description=_("Analyzes a YouTube video URL."))
+    @scriptHandler.script(description=_("Analyzes a YouTube, Instagram or Twitter video URL."))
     def script_analyzeOnlineVideo(self, gesture):
         if self.toggling: self.finish()
         wx.CallLater(100, self._open_video_dialog)
 
     def _open_video_dialog(self):
-        # Translators: Title for the YouTube URL entry dialog
-        title = _("YouTube / Instagram Analysis")
-        # Translators: Label for the text entry in YouTube dialog
-        msg = _("Enter Video URL (YouTube/Instagram):")
+        # Translators: Title for the video URL entry dialog
+        title = _("YouTube / Instagram / Twitter Analysis")        # Translators: Label for the text entry in YouTube dialog
+        # Translators: Label for the text entry in video dialog
+        msg = _("Enter Video URL (YouTube/Instagram/Twitter):")
         dlg = wx.TextEntryDialog(gui.mainFrame, msg, title)
         dlg.Raise()
         if dlg.ShowModal() == wx.ID_OK:
@@ -1753,29 +1803,49 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         dlg.Destroy()
 
     def _thread_video(self, url):
-        # Translators: Message reported when processing YouTube link
-        msg = _("Processing Video...")
-        wx.CallAfter(self.report_status, msg)
+        try:
+            parsed_url = urlparse(url)
+            domain = parsed_url.netloc.lower()
+            if not domain:
+                # Translators: Error message when the URL is invalid
+                wx.CallAfter(self.report_status, _("Error: Invalid URL."))
+                return
+        except:
+            wx.CallAfter(self.report_status, _("Error: Invalid URL."))
+            return
+
+        is_youtube = any(d in domain for d in ["youtube.com", "youtu.be"])
+        is_insta = "instagram.com" in domain
+        is_twitter = any(d in domain for d in ["twitter.com", "x.com"])
+
+        if not (is_youtube or is_insta or is_twitter):
+            # Translators: Error message when the platform is not supported
+            wx.CallAfter(self.report_status, _("Error: Unsupported platform. Only YouTube, Instagram, and Twitter are supported."))
+            return
+
+        # Translators: Message reported when processing video link
+        wx.CallAfter(self.report_status, _("Processing Video..."))
         
         lang = config.conf["VisionAssistant"]["ai_response_language"]
         p = f"Analyze this video. Provide a detailed description of the visual content and a summary of the audio. IMPORTANT: Write the entire response STRICTLY in {lang} language."
 
         chat_attachments = []
 
-        try:
-            parsed_url = urlparse(url)
-            domain = parsed_url.netloc.lower()
-        except:
-            domain = ""
+        if is_insta or is_twitter:
+            if is_insta:
+                direct_link = get_instagram_download_link(url)
+                # Translators: Error message for Instagram extraction failure
+                err_msg = _("Error: Could not extract Instagram video.")
+            else:
+                direct_link = get_twitter_download_link(url)
+                # Translators: Error message for Twitter extraction failure
+                err_msg = _("Error: Could not extract Twitter video.")
 
-        if domain == "instagram.com" or domain == "www.instagram.com" or domain.endswith(".instagram.com"):
-            direct_link = get_instagram_download_link(url)
             if not direct_link:
-                # Translators: Error message when Instagram video link cannot be found
-                wx.CallAfter(self.report_status, _("Error: Could not extract Instagram video."))
+                wx.CallAfter(self.report_status, err_msg)
                 return
             
-            # Translators: Message reported when downloading Instagram video
+            # Translators: Message reported when downloading video
             wx.CallAfter(self.report_status, _("Downloading Video..."))
             temp_path = _download_temp_video(direct_link)
             
@@ -1790,39 +1860,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
                 file_uri = self._upload_file_to_gemini(temp_path, "video/mp4")
                 if file_uri:
                     chat_attachments = [{'mime_type': 'video/mp4', 'file_uri': file_uri}]
-                    
                     # Translators: Message reported when AI is analyzing the video
                     wx.CallAfter(self.report_status, _("Analyzing..."))
-                    
-                    parts = [
-                        {"file_data": {"mime_type": "video/mp4", "file_uri": file_uri}},
-                        {"text": p}
-                    ]
-                    res = self._call_gemini_safe([{"parts": parts}])
-                    
+                    res = self._call_gemini_safe(p, attachments=chat_attachments)
                     if res:
                         self.current_status = _("Idle")
                         if not self._handle_direct_output(res):
                             wx.CallAfter(self._open_doc_chat_dialog, res, chat_attachments, "", res)
-                    else:
-                        self.current_status = _("Idle")
             finally:
                 if os.path.exists(temp_path):
                     os.remove(temp_path)
 
-        else:
+        elif is_youtube:
             # Translators: Message reported when analyzing YouTube video
             wx.CallAfter(self.report_status, _("Analyzing YouTube..."))
-            
             chat_attachments = [{'mime_type': 'video/mp4', 'file_uri': url}]
-            
-            parts = [
-                {"file_data": {"mime_type": "video/mp4", "file_uri": url}},
-                {"text": p}
-            ]
-            
-            res = self._call_gemini_safe([{"parts": parts}])
-            
+            res = self._call_gemini_safe(p, attachments=chat_attachments)
             if res:
                 self.current_status = _("Idle")
                 if not self._handle_direct_output(res):
@@ -1947,4 +2000,5 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         "kb:u": "checkUpdate",
         "kb:shift+t": "translateClipboard",
         "kb:shift+v": "analyzeOnlineVideo",
+        "kb:h": "showHelp",
     }

@@ -4,16 +4,20 @@ Profesyonel Görsel Asistan Dokümantasyonu
 
 **Profesyonel Görsel Asistan**, NVDA için gelişmiş, çok modlu bir yapay zekâ asistanıdır. Google’ın Gemini modellerini kullanarak akıllı ekran okuma, çeviri, sesli dikte ve belge analiz yetenekleri sunar.
 
-*Bu eklenti, Engelliler Uluslararası Günü onuruna topluluğa sunulmuştur.*
+Bu eklenti, Engelliler Uluslararası Günü onuruna topluluğa sunulmuştur.
 
 ## 1. Kurulum ve Yapılandırma
 
 **NVDA Menüsü > Tercihler > Ayarlar > Profesyonel Görsel Asistan** yolunu izleyin.
 
-* **API Anahtarı:** Gereklidir. [Google AI Studio](https://aistudio.google.com/) üzerinden ücretsiz bir anahtar alabilirsiniz.
-* **Model:** `gemini-2.5-flash-lite` (En hızlı) veya standart Flash modellerini seçin.
-* **Diller:** Kaynak, Hedef ve Yapay Zekâ Yanıt dillerini ayarlayın.
-* **Akıllı takas:** Kaynak metin hedef dille eşleşirse dilleri otomatik olarak değiştirir.
+- **API Anahtarı:** Gereklidir. [Google AI Studio](https://aistudio.google.com/) üzerinden ücretsiz bir anahtar alabilirsiniz.
+- **Model:** `gemini-2.5-flash-lite` (En hızlı) veya standart Flash modellerini seçin.
+- **Diller:** Kaynak, Hedef ve Yapay Zekâ Yanıt dillerini ayarlayın.
+- **Proxy Bağlantısı:** İsteğe bağlı. Bölgenizde Google engellenmişse bunu kullanın. İsteklerinizi alan ve Gemini API'sine ileten bir sunucu adresine (URL) ihtiyacınız vardır.
+  > **Not:** Bu, standart VPN/SOCKS proxy'leri için **değildir** ('127.0.0.1:1080' gibi). Google'a köprü görevi gören bir web adresi (ör. "https://my-custom-proxy.com") olmalıdır.
+- **Diller:** Kaynak, Hedef ve YZ Yanıt dillerini ayarlayın.
+- **Akıllı takas:** Kaynak metin hedef dille eşleşirse dilleri otomatik olarak değiştirir.
+- **Doğrudan Çıktı:** Sohbet penceresini atlar ve yanıtı doğrudan konuşma yoluyla duyurur.
 - **Pano Entegrasyonu:** Yapay zeka yanıtını otomatik olarak panoya kopyalar.
 
 ## 2. Komut Katmanı ve Kısayollar
@@ -38,6 +42,7 @@ Klavye kısayol çakışmalarını önlemek için bu eklenti bir **Komut Katman�
 | **S**         | Akıllı Dikte            | Konuşmayı metne dönüştürür. Kaydı başlatmak için basın, durdurmak/yazmak için tekrar basın. |
 | **L**         | Durumu Seslendir         | Mevcut durumu seslendirir (örn. "Yükleniyor...", "Boşta").                                      |
 | **U**         | Güncelleme Kontrolü     | GitHub üzerinden en son sürümü denetler.                                                |
+| **H** | Komut Yardımı | Kullanılabilir tüm kısayol tuşlarının kapsamlı bir listesini ve bunların komut katmanındaki açıklamalarını görüntüler. |
 
 ## 3. Özel İstemler ve Değişkenler
 
@@ -63,6 +68,11 @@ Ayarlar bölümünde komutlar oluşturun: `Ad:İstem Metni` (`|` veya yeni satı
 * **Kod Hata Ayıklayıcı:** `Debug:Bu koddaki hataları bul ve açıkla: [selection]`
 
 **Not:** Tüm yapay zekâ özellikleri için aktif bir internet bağlantısı gereklidir. Çok sayfalı TIFF dosyaları otomatik olarak işlenir.
+
+## 3.6.0 için değişiklikler
+* **Yardım Sistemi:** Tüm kısayolların ve işlevlerinin kolay erişilebilen bir listesini sağlamak için Komut Katmanı içine bir yardım komutu (`H`) eklendi.
+* **Çevrimiçi Video Analizi:** **Twitter (X)** videolarını içerecek şekilde genişletilmiş destek. Ayrıca daha güvenilir bir deneyim için iyileştirilmiş Bağlantı algılama ve kararlılık.
+* **Proje Katkısı:** Projenin gelecekteki güncellemelerini ve sürekli büyümesini desteklemek isteyen kullanıcılar için isteğe bağlı bir bağış iletişim kutusu eklendi.
 
 ## 3.5.0 için değişiklikler
 *   **Komut Katmanı:** Kısayolları tek bir ana tuş altında gruplamak için bir Komut Katmanı sistemi (varsayılan: `NVDA+Shift+V`) kullanıma sunuldu. Örneğin, çeviri için 'NVDA+Control+Shift+T' tuşlarına basmak yerine artık 'NVDA+Shift+V' ve ardından 'T' tuşlarına basıyorsunuz.

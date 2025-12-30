@@ -32,7 +32,7 @@ To prevent keyboard conflicts, this add-on uses a **Command Layer**.
 | **R**         | Text Refiner             | Summarize, Fix Grammar, Explain, or run **Custom Prompts**.                 |
 | **V**         | Object Vision            | Describes the current navigator object.                                     |
 | **O**         | Full Screen Vision       | Analyzes the entire screen layout and content.                              |
-| **Shift + V** | Online Video Analysis    | Analyze **YouTube** or **Instagram** videos via URL.                        |
+| **Shift + V** | Online Video Analysis | Analyze **YouTube**, **Instagram**, or **Twitter (X)** videos via URL. |
 | **D**         | Document Analysis        | Chat with PDF/TXT/MD/PY files.                                              |
 | **F**         | File OCR                 | Direct OCR from image/PDF/TIFF files (Multi-page TIFF supported).           |
 | **A**         | Audio Transcription      | Transcribe MP3/WAV/OGG files.                                               |
@@ -40,6 +40,7 @@ To prevent keyboard conflicts, this add-on uses a **Command Layer**.
 | **S**         | Smart Dictation          | Converts speech to text. Press to start recording, again to stop/type.      |
 | **L**         | Status Reporting         | Announces the current status (e.g., "Uploading...", "Idle").                |
 | **U**         | Update Check             | Check GitHub for the latest version.                                        |
+| **H** | Commands Help | Displays a comprehensive list of all available shortcut keys and their descriptions within the command layer. |
 
 ## 3. Custom Prompts & Variables
 
@@ -65,6 +66,11 @@ Create commands in Settings: `Name:Prompt Text` (separate with `|` or new lines)
 - **Code Debugger:** `Debug:Find bugs in this code and explain them: [selection]`
 
 **Note:** An active internet connection is required for all AI features. Multi-page TIFFs are automatically processed.
+
+## Changes for 3.6.0
+*   **Help System:** Added a help command (`H`) within the Command Layer to provide an easy-to-access list of all shortcuts and their functions.
+*   **Online Video Analysis:** Expanded support to include **Twitter (X)** videos. Also improved URL detection and stability for a more reliable experience.
+*   **Project Contribution:** Added an optional donation dialog for users who wish to support the project’s future updates and continuous growth.
 
 ## Changes for 3.5.0
 \*   \*\*Command Layer:\*\* Introduced a Command Layer system (default: `NVDA+Shift+V`) to group shortcuts under a single master key. For example, instead of pressing `NVDA+Control+Shift+T` for translation, you now press `NVDA+Shift+V` followed by `T`.

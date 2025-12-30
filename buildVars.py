@@ -23,12 +23,13 @@ Command Layer: Press NVDA+Shift+V, then:
 - Smart Dictation (S)
 - Announce Status (L)
 - Check Update (U)"""),
-    addon_version="3.5.1",
+    addon_version="3.6.0",
     # Brief changelog for this version
     # Translators: what's new content for the add-on version to be shown in the add-on store
-    addon_changelog=_("""## Changes for 3.5.0
-*   **Command Layer:** Introduced a Command Layer system (default: `NVDA+Shift+V`) to group shortcuts under a single master key. For example, instead of pressing `NVDA+Control+Shift+T` for translation, you now press `NVDA+Shift+V` followed by `T`.
-*   **Online Video Analysis:** Added a new feature to analyze YouTube and Instagram videos directly by providing a URL."""),
+    addon_changelog=_("""## Changes for 3.6.0
+*   **Help System:** Added a help command (`H`) within the Command Layer to provide an easy-to-access list of all shortcuts and their functions.
+*   **Online Video Analysis:** Expanded support to include **Twitter (X)** videos. Also improved URL detection and stability for a more reliable experience.
+*   **Project Contribution:** Added an optional donation dialog for users who wish to support the project’s future updates and continuous growth."""),
     addon_author="Mahmood Hozhabri",
     addon_url="https://github.com/mahmoodhozhabri/VisionAssistantPro",
     addon_sourceURL="https://github.com/mahmoodhozhabri/VisionAssistantPro",
