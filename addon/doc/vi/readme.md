@@ -1,6 +1,4 @@
-Tài liệu hướng dẫn Vision Assistant Pro
-
-# Vision Assistant Pro
+# Tài liệu hướng dẫn Vision Assistant Pro
 
 **Vision Assistant Pro** là trợ lý AI đa phương thức tiên tiến dành cho NVDA. Nó tận dụng các mô hình Gemini của Google để cung cấp khả năng đọc, dịch, đọc chính tả bằng giọng nói và phân tích tài liệu thông minh trên màn hình.
 
@@ -13,8 +11,8 @@ _Tiện ích bổ sung này được phát hành ra cộng đồng để vinh da
 - **API Key:** Yêu cầu. Nhận khóa miễn phí từ [Google AI Studio](https://aistudio.google.com/).
 - **Mô hình:** Chọn giữa các mẫu **Flash** (Nhanh nhất/Miễn phí) hoặc **Pro** (Thông minh cao) dựa trên nhu cầu của bạn.
 - **Proxy URL:** Không bắt buộc. Sử dụng điều này nếu Google bị chặn trong khu vực của bạn. Bạn cần một địa chỉ máy chủ (URL) nhận yêu cầu của bạn và chuyển tiếp chúng đến API Gemini.
-  > **Lưu ý:** Điều này **không** dành cho proxy VPN/SOCKS tiêu chuẩn (như `127.0.0.1:1080`). Đó phải là một địa chỉ web (ví dụ: `https://my-custom-proxy.com`) đóng vai trò là cầu nối với Google.
-- **Ngôn ngữ:** Đặt ngôn ngữ Nguồn, đích và Phản hồi AI.
+- **Công cụ OCR:** Chọn giữa **Chrome (nhanh)** để có kết quả nhanh hoặc **Gemini (đã định dạng)** để bảo toàn bố cục và nhận dạng bảng tốt hơn.
+- **Giọng TTs:** Chọn kiểu giọng nói ưa thích để tạo file âm thanh từ các trang tài liệu.
 - **Chuyển đổi thông minh:** Tự động hoán đổi ngôn ngữ nếu văn bản nguồn khớp với ngôn ngữ đích.
 - **Đầu ra trực tiếp:** Bỏ qua cửa sổ trò chuyện và thông báo phản hồi trực tiếp qua lời nói.
 - **Tích hợp bộ nhớ tạm:** Tự động sao chép phản hồi AI vào bộ nhớ tạm.
@@ -36,12 +34,21 @@ _Tiện ích bổ sung này được phát hành ra cộng đồng để vinh da
 | **V**           | hỗ trợ nhìn đối tượng        | Mô tả đối tượng điều hướng với cuộc trò chuyện tiếp theo.                         |
 | **O**           | hỗ trợ nhìn toàn màn hình    | Phân tích toàn bộ bố cục và nội dung màn hình.                                  |
 | **Shift + V** | Phân tích video trực tuyến | Phân tích video **YouTube** hoặc **Instagram** qua URL.                        |
-| **D**           | Hỏi đáp tài liệu     | Trò chuyện với PDF/TXT/MD/PY files.                                              |
+| **D**           | Trình đọc tài liệu | Trình đọc nâng cao cho PDF và hình ảnh với lựa chọn phạm vi trang.               |
 | **F**           | File OCR             | OCR trực tiếp từ image/PDF file.                                             |
 | **A**           |Phiên âm âm thanh    | phiên âm MP3/WAV/OGG files.                                               |
 | **L**         | Báo cáo trạng thái | Thông báo trạng thái hiện tại (ví dụ: "Đang tải lên...", "Không hoạt động").                |
 | **U**           | kiểm tra cập nhật         | Kiểm tra GitHub cho phiên bản mới nhất.                                            |
 | **H** | Lệnh trợ giúp | Hiển thị danh sách đầy đủ tất cả các phím tắt có sẵn và mô tả của chúng trong lớp lệnh. |
+
+### 2.1 Phím tắt trình đọc tài liệu (Trình xem bên trong)
+Khi một tài liệu được mở thông qua lệnh **D** :
+- **Ctrl + PageDown:** Chuyển sang trang tiếp theo (thông báo số trang).
+- **Ctrl + PageUp:** Chuyển về trang trước (thông báo số trang).
+- **Alt + A:** Mở hộp thoại trò chuyện để đặt câu hỏi về tài liệu.
+- **Alt + R:** Buộc quét lại trang hiện tại hoặc tất cả các trang bằng công cụ Gemini.
+- **Alt + G:** Tạo và lưu file âm thanh chất lượng cao (WAV) từ nội dung.
+- **Alt + S / Ctrl + S:** Lưu văn bản được trích xuất dưới dạng tệp TXT hoặc HTML.
 
 ## 3. tùy chỉnh Prompts & biến
 
@@ -66,7 +73,20 @@ tạo lệnh trong cài đặt: `Name:Prompt Text` (tách biệt với `|` hoặ
 - **Analyze Audio:** `Summarize Audio:Listen to this recording and summarize the main points. [file_audio]`
 - **Code Debugger:** `Debug:Find bugs in this code and explain them: [selection]`
 
+***
 **Lưu ý:** Cần có kết nối internet hoạt động cho tất cả các tính năng AI. TIFF nhiều trang được xử lý tự động.
+
+## Thay đổi cho 4.0
+
+*   **Trình đọc tài liệu nâng cao:** Trình xem PDF và hình ảnh mới mạnh mẽ với tính năng chọn phạm vi trang, xử lý nền và điều hướng `Ctrl+PageUp/Down` liền mạch.
+*   **Trình đơn con mới:** Đã thêm menu con "Vision Assistant" trong menu Công cụ của NVDA để truy cập nhanh hơn vào các tính năng, cài đặt và tài liệu.
+*   **Tùy chỉnh linh hoạt:** Giờ đây, bạn có thể chọn công cụ OCR và giọng nói TTS ưa thích của mình trực tiếp từ bảng cài đặt.
+*   **Hỗ trợ nhiều khóa API:** Đã thêm hỗ trợ cho nhiều khóa API Gemini để đảm bảo dịch vụ liên tục. Bạn có thể nhập một khóa trên mỗi dòng hoặc phân tách chúng bằng dấu phẩy trong cài đặt.
+*   **Công cụ OCR thay thế:** Đã giới thiệu công cụ OCR mới để đảm bảo khả năng nhận dạng văn bản đáng tin cậy ngay cả khi đạt đến giới hạn API Gemini.
+*   **Xoay khóa API thông minh:** Tự động chuyển sang và ghi nhớ khóa API hoạt động nhanh nhất để vượt qua giới hạn mà không cần can thiệp thủ công.
+*   **Chuyển tài liệu sang âm thanh:** Khả năng tích hợp để tạo và lưu các file âm thanh chất lượng cao (WAV) từ các trang tài liệu trực tiếp trong trình đọc.
+*   **Hộp thoại Cập nhật được thiết kế lại:** giao diện mới có thể truy cập với hộp văn bản để đọc rõ ràng các thay đổi của phiên bản trước khi cài đặt.
+*   **Trạng thái hợp nhất & UX:** Hộp thoại file được tiêu chuẩn hóa trên tiện ích bổ sung và nâng cao lệnh 'L' để báo cáo tiến trình theo thời gian thực cho tất cả các tác vụ nền.
 
 ## thay đổi cho 3.6.0
 
