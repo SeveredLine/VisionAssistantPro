@@ -488,7 +488,6 @@ def _sanitize_default_prompt_overrides(data):
 def migrate_prompt_config_if_needed():
     changed = False
 
-    # Migrate custom prompts to v2.
     try:
         raw_v2 = config.conf["VisionAssistant"]["custom_prompts_v2"]
     except Exception:
@@ -506,7 +505,11 @@ def migrate_prompt_config_if_needed():
         config.conf["VisionAssistant"]["custom_prompts_v2"] = serialized_v2
         changed = True
 
-    # Normalize default prompt overrides and persist migrations.
+    # Legacy mirror is disabled. Clear old storage to prevent stale fallback data.
+    if raw_legacy:
+        config.conf["VisionAssistant"]["custom_prompts"] = ""
+        changed = True
+
     try:
         raw_defaults = config.conf["VisionAssistant"]["default_refine_prompts"]
     except Exception:
@@ -2145,6 +2148,7 @@ class SettingsPanel(gui.settingsDialogs.SettingsPanel):
         config.conf["VisionAssistant"]["skip_chat_dialog"] = self.skipChatDialog.Value
         config.conf["VisionAssistant"]["captcha_mode"] = 'navigator' if self.captchaMode.GetSelection() == 0 else 'fullscreen'
         config.conf["VisionAssistant"]["custom_prompts_v2"] = serialize_custom_prompts_v2(self.customPromptItems)
+        config.conf["VisionAssistant"]["custom_prompts"] = ""
         config.conf["VisionAssistant"]["default_refine_prompts"] = serialize_default_prompt_overrides(self.defaultPromptItems)
         config.conf["VisionAssistant"]["ocr_engine"] = OCR_ENGINES[self.ocr_sel.GetSelection()][1]
         config.conf["VisionAssistant"]["tts_voice"] = GEMINI_VOICES[self.voice_sel.GetSelection()][0]
