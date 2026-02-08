@@ -419,30 +419,6 @@ def parse_custom_prompts_legacy(raw_value):
                 items.append({"name": name, "content": content})
     return items
 
-def _is_legacy_custom_prompt_compatible(item):
-    name = str(item.get("name", "")).strip()
-    content = str(item.get("content", "")).strip()
-    if not name or not content:
-        return False
-    if ":" in name or "|" in name:
-        return False
-    if "|" in content or "\n" in content or "\r" in content:
-        return False
-    return True
-
-def serialize_custom_prompts_legacy(items):
-    if not items:
-        return ""
-    parts = []
-    for item in _normalize_custom_prompt_items(items):
-        if not _is_legacy_custom_prompt_compatible(item):
-            continue
-        name = str(item.get("name", "")).strip()
-        content = str(item.get("content", "")).strip()
-        if name and content:
-            parts.append(f"{name}:{content}")
-    return "|".join(parts)
-
 def parse_custom_prompts_v2(raw_value):
     if not isinstance(raw_value, str) or not raw_value.strip():
         return None
@@ -512,7 +488,7 @@ def _sanitize_default_prompt_overrides(data):
 def migrate_prompt_config_if_needed():
     changed = False
 
-    # Migrate custom prompts to v2 and keep legacy mirror for backward compatibility.
+    # Migrate custom prompts to v2.
     try:
         raw_v2 = config.conf["VisionAssistant"]["custom_prompts_v2"]
     except Exception:
@@ -528,11 +504,6 @@ def migrate_prompt_config_if_needed():
     serialized_v2 = serialize_custom_prompts_v2(target_items)
     if serialized_v2 != (raw_v2 or ""):
         config.conf["VisionAssistant"]["custom_prompts_v2"] = serialized_v2
-        changed = True
-
-    serialized_legacy = serialize_custom_prompts_legacy(target_items)
-    if serialized_legacy != (raw_legacy or ""):
-        config.conf["VisionAssistant"]["custom_prompts"] = serialized_legacy
         changed = True
 
     # Normalize default prompt overrides and persist migrations.
@@ -2174,8 +2145,6 @@ class SettingsPanel(gui.settingsDialogs.SettingsPanel):
         config.conf["VisionAssistant"]["skip_chat_dialog"] = self.skipChatDialog.Value
         config.conf["VisionAssistant"]["captcha_mode"] = 'navigator' if self.captchaMode.GetSelection() == 0 else 'fullscreen'
         config.conf["VisionAssistant"]["custom_prompts_v2"] = serialize_custom_prompts_v2(self.customPromptItems)
-        # Keep a best-effort legacy mirror for backward compatibility with previous add-on versions.
-        config.conf["VisionAssistant"]["custom_prompts"] = serialize_custom_prompts_legacy(self.customPromptItems)
         config.conf["VisionAssistant"]["default_refine_prompts"] = serialize_default_prompt_overrides(self.defaultPromptItems)
         config.conf["VisionAssistant"]["ocr_engine"] = OCR_ENGINES[self.ocr_sel.GetSelection()][1]
         config.conf["VisionAssistant"]["tts_voice"] = GEMINI_VOICES[self.voice_sel.GetSelection()][0]
