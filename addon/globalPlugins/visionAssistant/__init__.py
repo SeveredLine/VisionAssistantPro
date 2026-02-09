@@ -1039,9 +1039,7 @@ class GeminiHandler:
     def translate(text, target_lang):
         def _logic(key, txt, lang):
             model = config.conf["VisionAssistant"]["model_name"]
-            proxy_url = config.conf["VisionAssistant"]["proxy_url"].strip()
-            base_url = proxy_url.rstrip('/') if proxy_url else "https://generativelanguage.googleapis.com"
-            url = f"{base_url}/v1beta/models/{model}:generateContent"
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
             quick_template = get_prompt_text("translate_quick") or "Translate to {target_lang}. Output ONLY translation."
             quick_prompt = apply_prompt_template(quick_template, [("target_lang", lang)])
             payload = {"contents": [{"parts": [{"text": quick_prompt}, {"text": txt}]}]}
@@ -1054,9 +1052,7 @@ class GeminiHandler:
     def ocr_page(image_bytes):
         def _logic(key, img_data):
             model = config.conf["VisionAssistant"]["model_name"]
-            proxy_url = config.conf["VisionAssistant"]["proxy_url"].strip()
-            base_url = proxy_url.rstrip('/') if proxy_url else "https://generativelanguage.googleapis.com"
-            url = f"{base_url}/v1beta/models/{model}:generateContent"
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
             ocr_image_prompt = get_prompt_text("ocr_image_extract")
             payload = {"contents": [{"parts": [{"inline_data": {"mime_type": "image/jpeg", "data": base64.b64encode(img_data).decode('utf-8')}}, {"text": ocr_image_prompt}]}]}
             req = request.Request(url, data=json.dumps(payload).encode('utf-8'), headers={"Content-Type": "application/json", "x-goog-api-key": key})
@@ -1675,17 +1671,23 @@ class SettingsPanel(gui.settingsDialogs.SettingsPanel):
         self.promptsSummary.SetLabel(summary)
 
     def onManagePrompts(self, event):
+        top = wx.GetTopLevelParent(self)
         dlg = PromptManagerDialog(
             self,
             self.defaultPromptItems,
             self.customPromptItems,
             PROMPT_VARIABLES_GUIDE,
         )
-        if dlg.ShowModal() == wx.ID_OK:
-            self.defaultPromptItems = dlg.get_default_items()
-            self.customPromptItems = dlg.get_custom_items()
-            self._refreshPromptSummary()
-        dlg.Destroy()
+        try:
+            if dlg.ShowModal() == wx.ID_OK:
+                self.defaultPromptItems = dlg.get_default_items()
+                self.customPromptItems = dlg.get_custom_items()
+                self._refreshPromptSummary()
+        finally:
+            dlg.Destroy()
+            if top:
+                top.Enable(True)
+                top.SetFocus()
 
     def onToggleApiVisibility(self, event):
         if self.showApiCheck.IsChecked():
@@ -3623,11 +3625,26 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             self.report_status(msg)
 
     def on_settings_click(self, event):
-        try:
-            wx.CallAfter(gui.settingsDialogs.NVDASettingsDialog, gui.mainFrame, SettingsPanel)
-        except Exception:
-            # Translators: Message shown when settings dialog is already open
-            ui.message(_("Settings dialog is already open."))
+        instance = getattr(gui.settingsDialogs.NVDASettingsDialog, "instance", None)
+        if instance:
+            try:
+                instance.Enable(True)
+                instance.Raise()
+                instance.SetFocus()
+                # Translators: Message shown when settings dialog is already open
+                ui.message(_("Settings dialog is already open."))
+                return
+            except:
+                gui.settingsDialogs.NVDASettingsDialog.instance = None
+
+        def _open():
+            try:
+                gui.settingsDialogs.NVDASettingsDialog(gui.mainFrame, SettingsPanel)
+            except Exception:
+                # Translators: Message shown when settings dialog is already open
+                ui.message(_("Settings dialog is already open."))
+        
+        wx.CallAfter(_open)
 
     def on_help_click(self, event):
         # Translators: Message when opening documentation
