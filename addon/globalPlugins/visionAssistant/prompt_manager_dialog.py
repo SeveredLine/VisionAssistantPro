@@ -387,6 +387,7 @@ class PromptManagerDialog(wx.Dialog):
         # Translators: Title of dialog for editing a custom prompt.
         dlg = PromptItemDialog(
             self,
+            # Translators: Title of the dialog for editing an existing custom prompt.
             _("Edit Custom Prompt"),
             current["name"],
             current["content"],

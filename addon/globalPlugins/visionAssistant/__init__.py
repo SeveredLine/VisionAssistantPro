@@ -80,36 +80,65 @@ MODELS = [
 ]
 
 GEMINI_VOICES = [
-    # Translators: Voice style description (e.g., Bright, Calm, Formal).
+    # Translators: Adjective describing a bright AI voice style.
     ("Zephyr", _("Bright")), 
+    # Translators: Adjective describing an upbeat AI voice style.
     ("Puck", _("Upbeat")), 
+    # Translators: Adjective describing an informative AI voice style.
     ("Charon", _("Informative")), 
+    # Translators: Adjective describing a firm AI voice style.
     ("Kore", _("Firm")), 
+    # Translators: Adjective describing an excitable AI voice style.
     ("Fenrir", _("Excitable")), 
+    # Translators: Adjective describing a youthful AI voice style.
     ("Leda", _("Youthful")), 
+    # Translators: Adjective describing a firm AI voice style.
     ("Orus", _("Firm")), 
+    # Translators: Adjective describing a breezy AI voice style.
     ("Aoede", _("Breezy")), 
+    # Translators: Adjective describing an easy-going AI voice style.
     ("Callirrhoe", _("Easy-going")), 
+    # Translators: Adjective describing a bright AI voice style.
     ("Autonoe", _("Bright")), 
+    # Translators: Adjective describing a breathy AI voice style.
     ("Enceladus", _("Breathy")), 
+    # Translators: Adjective describing a clear AI voice style.
     ("Iapetus", _("Clear")), 
+    # Translators: Adjective describing an easy-going AI voice style.
     ("Umbriel", _("Easy-going")), 
+    # Translators: Adjective describing a smooth AI voice style.
     ("Algieba", _("Smooth")), 
+    # Translators: Adjective describing a smooth AI voice style.
     ("Despina", _("Smooth")), 
+    # Translators: Adjective describing a clear AI voice style.
     ("Erinome", _("Clear")), 
+    # Translators: Adjective describing a gravelly AI voice style.
     ("Algenib", _("Gravelly")), 
+    # Translators: Adjective describing an informative AI voice style.
     ("Rasalgethi", _("Informative")), 
+    # Translators: Adjective describing an upbeat AI voice style.
     ("Laomedeia", _("Upbeat")), 
+    # Translators: Adjective describing a soft AI voice style.
     ("Achernar", _("Soft")), 
+    # Translators: Adjective describing a firm AI voice style.
     ("Alnilam", _("Firm")), 
+    # Translators: Adjective describing an even AI voice style.
     ("Schedar", _("Even")), 
+    # Translators: Adjective describing a mature AI voice style.
     ("Gacrux", _("Mature")), 
+    # Translators: Adjective describing a forward AI voice style.
     ("Pulcherrima", _("Forward")), 
+    # Translators: Adjective describing a friendly AI voice style.
     ("Achird", _("Friendly")), 
+    # Translators: Adjective describing a casual AI voice style.
     ("Zubenelgenubi", _("Casual")), 
+    # Translators: Adjective describing a gentle AI voice style.
     ("Vindemiatrix", _("Gentle")), 
+    # Translators: Adjective describing a lively AI voice style.
     ("Sadachbia", _("Lively")), 
+    # Translators: Adjective describing a knowledgeable AI voice style.
     ("Sadaltager", _("Knowledgeable")), 
+    # Translators: Adjective describing a warm AI voice style.
     ("Sulafat", _("Warm"))
 ]
 
@@ -194,56 +223,74 @@ LEGACY_REFINER_TOKENS = {
 DEFAULT_SYSTEM_PROMPTS = (
     {
         "key": "summarize",
+        # Translators: Section header for text refinement prompts in Prompt Manager.
         "section": _("Refine"),
+        # Translators: Label for the text summarization prompt.
         "label": _("Summarize"),
         "prompt": "Summarize the text below in {response_lang}.",
     },
     {
         "key": "fix_grammar",
+        # Translators: Section header for text refinement prompts in Prompt Manager.
         "section": _("Refine"),
+        # Translators: Label for the grammar correction prompt.
         "label": _("Fix Grammar"),
         "prompt": "Fix grammar in the text below. Output ONLY the fixed text.",
     },
     {
         "key": "fix_translate",
+        # Translators: Section header for text refinement prompts in Prompt Manager.
         "section": _("Refine"),
+        # Translators: Label for the grammar correction and translation prompt.
         "label": _("Fix Grammar & Translate"),
         "prompt": "Fix grammar and translate to {target_lang}.{swap_instruction} Output ONLY the result.",
     },
     {
         "key": "explain",
+        # Translators: Section header for text refinement prompts in Prompt Manager.
         "section": _("Refine"),
+        # Translators: Label for the text explanation prompt.
         "label": _("Explain"),
         "prompt": "Explain the text below in {response_lang}.",
     },
     {
         "key": "translate_main",
+        # Translators: Section header for translation-related prompts in Prompt Manager.
         "section": _("Translation"),
+        # Translators: Label for the smart translation prompt.
         "label": _("Smart Translation"),
         "prompt": PROMPT_TRANSLATE.strip(),
     },
     {
         "key": "translate_quick",
+        # Translators: Section header for translation-related prompts in Prompt Manager.
         "section": _("Translation"),
+        # Translators: Label for the quick translation prompt.
         "label": _("Quick Translation"),
         "prompt": "Translate to {target_lang}. Output ONLY translation.",
     },
     {
         "key": "document_chat_system",
+        # Translators: Section header for document-related prompts in Prompt Manager.
         "section": _("Document"),
+        # Translators: Label for the initial context prompt in document chat.
         "label": _("Document Chat Context"),
         "prompt": "STRICTLY Respond in {response_lang}. Use Markdown formatting. Analyze the attached content to answer.",
     },
     {
         "key": "document_chat_ack",
+        # Translators: Section header for advanced/internal prompts in Prompt Manager.
         "section": _("Advanced"),
+        # Translators: Label for the AI's acknowledgement reply in document chat.
         "label": _("Document Chat Bootstrap Reply"),
         "internal": True,
         "prompt": "Context received. Ready for questions.",
     },
     {
         "key": "vision_navigator_object",
+        # Translators: Section header for image analysis prompts in Prompt Manager.
         "section": _("Vision"),
+        # Translators: Label for the prompt used to analyze the current navigator object.
         "label": _("Navigator Object Analysis"),
         "prompt": (
             "Analyze this image. Describe the layout, visible text, and UI elements. "
@@ -255,7 +302,9 @@ DEFAULT_SYSTEM_PROMPTS = (
     },
     {
         "key": "vision_fullscreen",
+        # Translators: Section header for image analysis prompts in Prompt Manager.
         "section": _("Vision"),
+        # Translators: Label for the prompt used to analyze the entire screen.
         "label": _("Full Screen Analysis"),
         "prompt": (
             "Analyze this image. Describe the layout, visible text, and UI elements. "
@@ -267,21 +316,27 @@ DEFAULT_SYSTEM_PROMPTS = (
     },
     {
         "key": "vision_followup_context",
+        # Translators: Section header for advanced/internal prompts in Prompt Manager.
         "section": _("Advanced"),
+        # Translators: Label for the follow-up context in image analysis chat.
         "label": _("Vision Follow-up Context"),
         "internal": True,
         "prompt": "Image Context. Target Language: {response_lang}",
     },
     {
         "key": "vision_followup_suffix",
+        # Translators: Section header for advanced/internal prompts in Prompt Manager.
         "section": _("Advanced"),
+        # Translators: Label for the rule enforced during image analysis follow-up questions.
         "label": _("Vision Follow-up Answer Rule"),
         "internal": True,
         "prompt": "Answer strictly in {response_lang}",
     },
     {
         "key": "video_analysis",
+        # Translators: Section header for video analysis prompts in Prompt Manager.
         "section": _("Video"),
+        # Translators: Label for the video content analysis prompt.
         "label": _("Video Analysis"),
         "prompt": (
             "Analyze this video. Provide a detailed description of the visual content and a "
@@ -291,13 +346,17 @@ DEFAULT_SYSTEM_PROMPTS = (
     },
     {
         "key": "audio_transcription",
+        # Translators: Section header for audio-related prompts in Prompt Manager.
         "section": _("Audio"),
+        # Translators: Label for the audio file transcription prompt.
         "label": _("Audio Transcription"),
         "prompt": "Transcribe this audio in {response_lang}.",
     },
     {
         "key": "dictation_transcribe",
+        # Translators: Section header for audio-related prompts in Prompt Manager.
         "section": _("Audio"),
+        # Translators: Label for the smart voice dictation prompt.
         "label": _("Smart Dictation"),
         "prompt": (
             "Transcribe speech. Use native script. Fix stutters. If there is no speech, silence, "
@@ -306,7 +365,9 @@ DEFAULT_SYSTEM_PROMPTS = (
     },
     {
         "key": "ocr_image_extract",
+        # Translators: Section header for OCR-related prompts in Prompt Manager.
         "section": _("OCR"),
+        # Translators: Label for the OCR prompt used for image text extraction.
         "label": _("OCR Image Extraction"),
         "prompt": (
             "Extract all visible text from this image. Strictly preserve original formatting "
@@ -316,7 +377,9 @@ DEFAULT_SYSTEM_PROMPTS = (
     },
     {
         "key": "ocr_document_extract",
+        # Translators: Section header for OCR-related prompts in Prompt Manager.
         "section": _("OCR"),
+        # Translators: Label for the OCR prompt used for document text extraction.
         "label": _("OCR Document Extraction"),
         "prompt": (
             "Extract all visible text from this document. Strictly preserve original formatting "
@@ -327,7 +390,9 @@ DEFAULT_SYSTEM_PROMPTS = (
     },
     {
         "key": "ocr_document_translate",
+        # Translators: Section header for document-related prompts in Prompt Manager.
         "section": _("Document"),
+        # Translators: Label for the combined OCR and translation prompt for documents.
         "label": _("Document OCR + Translate"),
         "prompt": (
             "Extract all text from this document. Preserve formatting (Markdown). Then translate "
@@ -337,7 +402,9 @@ DEFAULT_SYSTEM_PROMPTS = (
     },
     {
         "key": "captcha_solver_base",
+        # Translators: Section header for CAPTCHA-related prompts in Prompt Manager.
         "section": _("CAPTCHA"),
+        # Translators: Label for the CAPTCHA solving prompt.
         "label": _("CAPTCHA Solver"),
         "internal": True,
         "prompt": (
@@ -347,7 +414,9 @@ DEFAULT_SYSTEM_PROMPTS = (
     },
     {
         "key": "refine_files_only",
+        # Translators: Section header for advanced/internal prompts in Prompt Manager.
         "section": _("Advanced"),
+        # Translators: Label for the fallback prompt when only files are provided in Refine.
         "label": _("Refine Files-Only Fallback"),
         "internal": True,
         "prompt": "Analyze these files.",
@@ -355,12 +424,19 @@ DEFAULT_SYSTEM_PROMPTS = (
 )
 
 PROMPT_VARIABLES_GUIDE = (
+    # Translators: Description and input type for the [selection] variable in the Variables Guide.
     ("[selection]", _("Currently selected text"), _("Text")),
+    # Translators: Description for the [clipboard] variable in the Variables Guide.
     ("[clipboard]", _("Clipboard content"), _("Text")),
+    # Translators: Description and input type for the [screen_obj] variable in the Variables Guide.
     ("[screen_obj]", _("Screenshot of the navigator object"), _("Image")),
+    # Translators: Description for the [screen_full] variable in the Variables Guide.
     ("[screen_full]", _("Screenshot of the entire screen"), _("Image")),
+    # Translators: Description and input type for the [file_ocr] variable in the Variables Guide.
     ("[file_ocr]", _("Select image/PDF/TIFF for text extraction"), _("Image, PDF, TIFF")),
+    # Translators: Description and input type for the [file_read] variable in the Variables Guide.
     ("[file_read]", _("Select document for reading"), _("TXT, Code, PDF")),
+    # Translators: Description and input type for the [file_audio] variable in the Variables Guide.
     ("[file_audio]", _("Select audio file for analysis"), _("MP3, WAV, OGG")),
 )
 
@@ -1294,9 +1370,11 @@ class UpdateManager:
                             
                             wx.CallAfter(self._prompt_update, latest_tag, download_url, clean_changes)
                         elif not silent:
+                            # Translators: Error message when an update is found but the addon file is missing from GitHub.
                             msg = _("Update found but no .nvda-addon file in release.")
                             show_error_dialog(msg)
                     elif not silent:
+                        # Translators: Status message informing the user they are already on the latest version.
                         msg = _("You have the latest version.")
                         wx.CallAfter(ui.message, msg)
         except Exception as e:
@@ -1496,7 +1574,7 @@ class VisionQADialog(wx.Dialog):
         if path:
             try:
                 with open(path, "w", encoding="utf-8") as f: f.write(self.outputArea.GetValue())
-                # Translators: Message on successful save
+                # Translators: Message shown on successful save of a file.
                 self.report_save(_("Saved."))
             except Exception as e:
                 # Translators: Message in the error dialog when saving fails.
@@ -2344,6 +2422,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         self.va_menu.Bind(wx.EVT_MENU, self.on_donate_click, item_donate)
         
         self.tools_menu = gui.mainFrame.sysTrayIcon.toolsMenu
+        # Translators: The name of the addon's sub-menu in the NVDA Tools menu.
         self.va_submenu_item = self.tools_menu.AppendSubMenu(self.va_menu, _("Vision Assistant"))
         
         self.refine_dlg = None

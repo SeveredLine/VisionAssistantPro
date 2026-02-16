@@ -49,8 +49,7 @@ def requestDonations(parentWindow):
 	title = _("Support the Future of {name}").format(name=addon_summary)
 	
 	# Translators: The main message of the donation dialog. 
-	message = _(
-		"{name} is a project born from a personal vision to bridge the gap between AI and true accessibility. "
+	message = _("{name} is a project born from a personal vision to bridge the gap between AI and true accessibility. "
 		"The initial concept and many of the features you enjoy were created from my own ideas to solve real challenges and provide a new level of digital independence.\n\n"
 		"I take great pride in thinking through every detail and turning both my own innovations and your valuable requests into reality. "
 		"Ensuring this tool remains fast, stable, and constantly evolving is a continuous creative journey that I am passionate about pursuing.\n\n"
