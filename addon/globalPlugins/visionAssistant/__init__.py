@@ -259,6 +259,10 @@ DEFAULT_SYSTEM_PROMPTS = (
         "section": _("Translation"),
         # Translators: Label for the smart translation prompt.
         "label": _("Smart Translation"),
+        "guarded": True,
+        # Translators: Feature name used in guarded prompt warnings for smart translation.
+        "guardedFeatureLabel": _("Smart Translation"),
+        "requiredMarkers": ["{target_lang}", "{swap_target}", "{smart_swap}", "{text_content}"],
         "prompt": PROMPT_TRANSLATE.strip(),
     },
     {
@@ -358,6 +362,10 @@ DEFAULT_SYSTEM_PROMPTS = (
         "section": _("Audio"),
         # Translators: Label for the smart voice dictation prompt.
         "label": _("Smart Dictation"),
+        "guarded": True,
+        # Translators: Feature name used in guarded prompt warnings for smart dictation.
+        "guardedFeatureLabel": _("Smart Dictation"),
+        "requiredMarkers": ["[[[NOSPEECH]]]"],
         "prompt": (
             "Transcribe speech. Use native script. Fix stutters. If there is no speech, silence, "
             "or background noise only, write exactly: [[[NOSPEECH]]]"
@@ -381,6 +389,10 @@ DEFAULT_SYSTEM_PROMPTS = (
         "section": _("OCR"),
         # Translators: Label for the OCR prompt used for document text extraction.
         "label": _("OCR Document Extraction"),
+        "guarded": True,
+        # Translators: Feature name used in guarded prompt warnings for OCR document extraction.
+        "guardedFeatureLabel": _("OCR Document Extraction"),
+        "requiredMarkers": ["[[[PAGE_SEP]]]"],
         "prompt": (
             "Extract all visible text from this document. Strictly preserve original formatting "
             "(headings, lists, tables) using Markdown. You MUST insert the exact delimiter "
@@ -406,7 +418,10 @@ DEFAULT_SYSTEM_PROMPTS = (
         "section": _("CAPTCHA"),
         # Translators: Label for the CAPTCHA solving prompt.
         "label": _("CAPTCHA Solver"),
-        "internal": True,
+        "guarded": True,
+        # Translators: Feature name used in guarded prompt warnings for CAPTCHA solver.
+        "guardedFeatureLabel": _("CAPTCHA Solver"),
+        "requiredMarkers": ["[[[NO_CAPTCHA]]]"],
         "prompt": (
             "Blind user. Return CAPTCHA code only. If NO CAPTCHA is detected in the image, "
             "strictly return: [[[NO_CAPTCHA]]].{captcha_extra}"
@@ -442,16 +457,57 @@ PROMPT_VARIABLES_GUIDE = (
 
 # --- Helpers ---
 
+def _normalize_required_markers(markers):
+    if not isinstance(markers, (list, tuple)):
+        return []
+    normalized = []
+    for marker in markers:
+        if not isinstance(marker, str):
+            continue
+        marker = marker.strip()
+        if marker and marker not in normalized:
+            normalized.append(marker)
+    return normalized
+
+def _normalize_required_regex_checks(regex_checks):
+    if not isinstance(regex_checks, (list, tuple)):
+        return []
+    normalized = []
+    seen = set()
+    for regex_item in regex_checks:
+        if isinstance(regex_item, dict):
+            pattern = regex_item.get("pattern")
+            description = regex_item.get("description")
+        else:
+            pattern = regex_item
+            description = ""
+        if not isinstance(pattern, str):
+            continue
+        pattern = pattern.strip()
+        if not pattern or pattern in seen:
+            continue
+        seen.add(pattern)
+        if not isinstance(description, str):
+            description = ""
+        description = description.strip() or pattern
+        normalized.append({"pattern": pattern, "description": description})
+    return normalized
+
 def get_builtin_default_prompts():
     builtins = []
     for item in DEFAULT_SYSTEM_PROMPTS:
         p = str(item["prompt"]).strip()
+        guarded = bool(item.get("guarded"))
         builtins.append({
             "key": item["key"],
             "section": item["section"],
             "label": item["label"],
             "display_label": f"{item['section']} - {item['label']}",
             "internal": bool(item.get("internal")),
+            "guarded": guarded,
+            "guardedFeatureLabel": str(item.get("guardedFeatureLabel", item["label"])).strip() if guarded else "",
+            "requiredMarkers": _normalize_required_markers(item.get("requiredMarkers")),
+            "requiredRegex": _normalize_required_regex_checks(item.get("requiredRegex")),
             "prompt": p,
             "default": p,
         })
