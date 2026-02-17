@@ -335,10 +335,10 @@ class PromptManagerDialog(wx.Dialog):
         feature = self._get_guarded_feature_label(item)
         # Translators: Confirmation message shown before saving a guarded prompt.
         msg = _(
-            "You are editing a prompt used by '{feature}'.\n\nIf this text is changed incorrectly, this feature may work incorrectly.\n\nDo you understand the risk and want to save anyway?"
+            "You are editing a prompt used by '{feature}'.\n\nIf this prompt is changed, this feature may not work correctly.\n\nDo you understand the risk and want to save anyway?"
         ).format(feature=feature)
         # Translators: Title of confirmation dialog shown before saving guarded prompts.
-        title = _("Confirm Risk")
+        title = _("Confirm")
         dlg = wx.MessageDialog(self, msg, title, wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING)
         try:
             # Translators: Confirm button label for guarded prompt save confirmation.
